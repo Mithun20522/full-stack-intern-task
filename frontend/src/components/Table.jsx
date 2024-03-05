@@ -19,7 +19,8 @@ const TableComponent = () => {
         });
         if (res.ok) {
           const data = await res.json();
-          setTableData(data);
+        setTableData(data.map((item, index) => ({ ...item, serialNumber: index + 1 })));
+
         }
       } catch (error) {}
     };
@@ -34,15 +35,16 @@ const TableComponent = () => {
       });
       if (res.ok) {
         const data = await res.json();
-        setTableData(data);
+        setTableData(data.map((item, index) => ({ ...item, serialNumber: index + 1 })));
+
       }
     } catch (error) {}
   };
 
   const handleUpdate = (data) => {
-    setFormData(data); // Set the form data with the selected row data
-    setSelectedId(data._id); // Set the selected row id
-    setOpenModal(true); // Open the modal
+    setFormData(data); 
+    setSelectedId(data._id); 
+    setOpenModal(true); 
   };
 
 
@@ -67,12 +69,13 @@ const TableComponent = () => {
       if (res.ok) {
         const data = await res.json();
         setFormData(data);
-        setTableData([data]);
-        setOpenModal(false);
+        setTableData(data.map((item, index) => ({ ...item, serialNumber: index + 1 })));
+        
       }
     } catch (error) {
       console.error("Error updating data:", error);
     }
+    setOpenModal(false);
     e.target.reset();
   };
 
@@ -95,7 +98,7 @@ const TableComponent = () => {
                 <Table.Cell>
                   <Checkbox />
                 </Table.Cell>
-                <Table.Cell>1</Table.Cell>
+                <Table.Cell>{data.serialNumber}</Table.Cell>
                 <Table.Cell>{data.name}</Table.Cell>
                 <Table.Cell>{data.phonenumber}</Table.Cell>
                 <Table.Cell>{data.email}</Table.Cell>
