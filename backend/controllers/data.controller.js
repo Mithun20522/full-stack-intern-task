@@ -34,5 +34,25 @@ export const getFormData = async(req, res) => {
     } catch (error) {
         
     }
+}
 
+// update data (U)
+export const updateFormData = async(req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, email, phonenumber, hobby } = req.body;
+        const updatedData = await Form.findByIdAndUpdate(id, {
+            name: name,
+            email: email,
+            phonenumber: phonenumber,
+            hobby: hobby
+        }, { new: true });
+        if (!updatedData) {
+            return res.status(404).send('Data not found');
+        }
+        return res.status(200).send(updatedData);
+        
+    } catch (error) {
+        res.status(400).send('Internal server error');
+    }
 }
