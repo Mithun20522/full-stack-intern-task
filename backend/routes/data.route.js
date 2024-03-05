@@ -1,5 +1,5 @@
 import express from 'express'
-import { createFormData, getFormData, updateFormData } from '../controllers/data.controller.js';
+import { createFormData, deleteFormData, getFormData, updateFormData } from '../controllers/data.controller.js';
 
 const router = express.Router();
 
@@ -11,5 +11,8 @@ router.get('/get-data', getFormData);
 
 // update data api route
 router.patch('/update-data/:id', updateFormData);
+
+// delete data api route
+router.delete('/delete-data/:id', deleteFormData);
 
 export default router;

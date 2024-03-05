@@ -32,7 +32,7 @@ export const getFormData = async(req, res) => {
             return res.status(201).send(fetchedData);
         }
     } catch (error) {
-        
+        return res.status(500).send('internal server errorr');
     }
 }
 
@@ -53,6 +53,20 @@ export const updateFormData = async(req, res) => {
         return res.status(200).send(updatedData);
         
     } catch (error) {
-        res.status(400).send('Internal server error');
+        return res.status(500).send('Internal server error');
+    }
+}
+
+// delete data (D)
+export const deleteFormData = async(req, res) => {
+    try {
+        const {id} = req.params;
+        const deletedData = await Form.findByIdAndDelete(id);
+        if(!deletedData){
+            res.status(404).send('data not found');
+        }
+        res.status(201).send('Data deleted successfully');
+    } catch (error) {
+        return res.status(500).send('Internal server error');
     }
 }
