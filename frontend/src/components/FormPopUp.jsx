@@ -5,9 +5,36 @@ import { useState } from 'react';
 
 const FormPopUp = () => {
   const [openModal, setOpenModal] = useState(false);
-
+  const [formData, setFormData] = useState([]);
   function onCloseModal() {
     setOpenModal(false);
+  }
+
+  const handleSubmit = async (e) => {
+    try {
+        e.preventDefault();
+        const {name, email, phonenumber, hobby} = e.target.elements;
+        const res = await fetch(`http://localhost:5000/api/create-data`,{
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                name:name.value,
+                email:email.value,
+                phonenumber:phonenumber.value,
+                hobby:hobby.value
+            })
+        });
+        if(res.ok){
+            const data = await res.json();
+            setFormData([data]);
+        }
+        else{
+            console.log("error while fetching response");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+    e.target.reset();
   }
 
   return (
@@ -16,7 +43,7 @@ const FormPopUp = () => {
       <Modal show={openModal} size="md" onClose={onCloseModal} popup>
         <Modal.Header />
         <Modal.Body>
-          <div className="space-y-6">
+          <form className="space-y-6" onSubmit={(e) => handleSubmit(e)}>
             <h3 className="text-xl text-center font-medium text-gray-900 dark:text-white">Add new data in the form</h3>
             <div>
               <div className="mb-2 block">
@@ -50,8 +77,7 @@ const FormPopUp = () => {
                 id="phonenumber"
                 type='tel'
                 placeholder="888 888 8888"
-                pattern="[0-9]{3} [0-9]{3} [0-9]{4}"
-                maxlength="10"
+                maxLength="10"
                 required
               />
             </div>
@@ -66,9 +92,9 @@ const FormPopUp = () => {
               />
             </div>
             <div className="w-full flex justify-center">
-              <Button outline>Save</Button>
+              <Button type='submit' outline>Save</Button>
             </div>
-          </div>
+          </form>
         </Modal.Body>
       </Modal>
     </>

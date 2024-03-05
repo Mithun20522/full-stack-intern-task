@@ -2,7 +2,6 @@
 'use client';
 
 import { Checkbox, Table, Button } from 'flowbite-react';
-
 const TableComponent = () => {
   return (
     <div>
