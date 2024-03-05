@@ -115,7 +115,7 @@ const FormPopUp = () => {
           </form>
         </Modal.Body>
       </Modal>
-      <TableComponent setOpenModal={setOpenModal} formData={formData} setFormData={setFormData}/>
+      <TableComponent/>
     </>
   );
 }

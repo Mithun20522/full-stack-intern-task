@@ -1,62 +1,80 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Checkbox, Table, Button } from "flowbite-react";
-const TableComponent = ({setOpenModal, formData, setFormData}) => {
+import { Button, Checkbox, Label, Modal, TextInput, Table } from 'flowbite-react';
+const TableComponent = () => {
   const [tableData, setTableData] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [formData, setFormData] = useState({});
+  const [selectedId, setSelectedId] = useState(null);
+  function onCloseModal() {
+    setOpenModal(false);
+    setSelectedId(null);
+  }
   useEffect(() => {
     const fetchedData = async () => {
       try {
         const res = await fetch("http://localhost:5000/api/get-data", {
           method: "GET",
-          headers: { "Content-Type": "application/json" }
+          headers: { "Content-Type": "application/json" },
         });
         if (res.ok) {
           const data = await res.json();
           setTableData(data);
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     fetchedData();
   }, [tableData]);
 
-const handleDelete = async(id) => {
+  const handleDelete = async (id) => {
     try {
-        const res = await fetch(`http://localhost:5000/api/delete-data/${id}`,{
-            method: 'DELETE',
-            headers: {'Content-Type': 'application/json'}
-        })
-        if(res.ok){
-            const data = await res.json();
-            setTableData(data);
-        }
-    } catch (error) {
-    }
-}
+      const res = await fetch(`http://localhost:5000/api/delete-data/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setTableData(data);
+      }
+    } catch (error) {}
+  };
 
-const handleUpdate = async(id) => {
+  const handleUpdate = (data) => {
+    setFormData(data); // Set the form data with the selected row data
+    setSelectedId(data._id); // Set the selected row id
+    setOpenModal(true); // Open the modal
+  };
+
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-        setOpenModal(true);
-        const res = await fetch(`http://localhost:5000/api/update-data/${id}`,{
-            method: 'PATCH',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                name:formData.name,
-                email:formData.email,
-                phonenumber:formData.phonenumber,
-                hobby:formData.hobby
-            })
-        })
-        
-        if(res.ok){
-            const data = await res.json();
-            setFormData({name:data.name,email:data.email,phonenumber:data.phonenumber,hobby:data.hobby})
-            setTableData([data]);
-        }
+      const { name, email, phonenumber, hobby } = e.target.elements;
+      const res = await fetch(`http://localhost:5000/api/update-data/${selectedId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.value,
+          email: email.value,
+          phonenumber: phonenumber.value,
+          hobby: hobby.value,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setFormData(data);
+        setTableData([data]);
+        setOpenModal(false);
+      }
     } catch (error) {
-        console.log(error.message);
+      console.error("Error updating data:", error);
     }
-}
+    e.target.reset();
+  };
 
   return (
     <div>
@@ -70,30 +88,124 @@ const handleUpdate = async(id) => {
           <Table.HeadCell>Hobbies</Table.HeadCell>
           <Table.HeadCell>Update / Delete</Table.HeadCell>
         </Table.Head>
-        <Table.Body >
-            {
-                tableData && tableData.map((data) => (
-                    <Table.Row key={data._id}>
-                    <Table.Cell>
-                      <Checkbox />
-                    </Table.Cell>
-                    <Table.Cell>1</Table.Cell>
-                    <Table.Cell>{data.name}</Table.Cell>
-                    <Table.Cell>{data.phonenumber}</Table.Cell>
-                    <Table.Cell>{data.email}</Table.Cell>
-                    <Table.Cell>{data.hobby}</Table.Cell>
-                    <Table.Cell className="flex gap-2">
-                      <Button color="success" outline onClick={() => handleUpdate(data._id)}>
-                        Update
-                      </Button>
-                      <Button color="failure" outline onClick={() => handleDelete(data._id)}>
-                        Delete
-                      </Button>
-                    </Table.Cell>
-                  </Table.Row>
-                ))
-            }
-            </Table.Body>
+        <Table.Body>
+          {tableData &&
+            tableData.map((data) => (
+              <Table.Row key={data._id}>
+                <Table.Cell>
+                  <Checkbox />
+                </Table.Cell>
+                <Table.Cell>1</Table.Cell>
+                <Table.Cell>{data.name}</Table.Cell>
+                <Table.Cell>{data.phonenumber}</Table.Cell>
+                <Table.Cell>{data.email}</Table.Cell>
+                <Table.Cell>{data.hobby}</Table.Cell>
+                <Table.Cell className="flex gap-2">
+                  <Button
+                    color="success"
+                    outline
+                    onClick={() => handleUpdate(data)}
+                  >
+                    Update
+                  </Button>
+                  {openModal ? (
+                    <Modal
+                      show={openModal}
+                      size="md"
+                      onClose={onCloseModal}
+                      popup
+                    >
+                      <Modal.Header />
+                      <Modal.Body>
+                        <form
+                          className="space-y-6"
+                          onSubmit={handleSubmit}
+                        >
+                          <h3 className="text-xl text-center font-medium text-gray-900 dark:text-white">
+                            Update data
+                          </h3>
+                          <div>
+                            <div className="mb-2 block">
+                              <Label htmlFor="name" value="Your Name" />
+                            </div>
+                            <TextInput
+                              id="text"
+                              type="text"
+                              name="name"
+                              value={formData.name}
+                              onChange={handleChange}
+                              placeholder="Shane watson"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <div className="mb-2 block">
+                              <Label htmlFor="email" value="Your Email" />
+                            </div>
+                            <TextInput
+                              id="email"
+                              type="email"
+                              name="email"
+                              value={formData.email}
+                              onChange={handleChange}
+                              placeholder="name@example.com"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <div className="mb-2 block">
+                              <Label
+                                htmlFor="phonenumber"
+                                value="Your Phone Number"
+                              />
+                            </div>
+                            <TextInput
+                              id="phonenumber"
+                              type="tel"
+                              name="phonenumber"
+                              value={formData.phonenumber}
+                              onChange={handleChange}
+                              placeholder="888 888 8888"
+                              maxLength="10"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <div className="mb-2 block">
+                              <Label htmlFor="hobby" value="Your Hobby" />
+                            </div>
+                            <TextInput
+                              id="hobby"
+                              type="text"
+                              name="hobby"
+                              value={formData.hobby}
+                              onChange={handleChange}
+                              placeholder="dance"
+                              required
+                            />
+                          </div>
+                          <div className="w-full flex justify-center">
+                            <Button type="submit" outline>
+                              Update Data
+                            </Button>
+                          </div>
+                        </form>
+                      </Modal.Body>
+                    </Modal>
+                  ) : (
+                    ""
+                  )}
+                  <Button
+                    color="failure"
+                    outline
+                    onClick={() => handleDelete(data._id)}
+                  >
+                    Delete
+                  </Button>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+        </Table.Body>
       </Table>
     </div>
   );
