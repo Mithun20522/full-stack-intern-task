@@ -1,11 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Button, Checkbox, Label, Modal, TextInput, Table } from 'flowbite-react';
+import { Resend } from "resend";
+
 const TableComponent = () => {
   const [tableData, setTableData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [formData, setFormData] = useState({});
   const [selectedId, setSelectedId] = useState(null);
+  const [checkedRowData, setCheckedRowData] = useState([]);
+
   function onCloseModal() {
     setOpenModal(false);
     setSelectedId(null);
@@ -78,9 +82,27 @@ const TableComponent = () => {
     setOpenModal(false);
     e.target.reset();
   };
-  const handleSend = () => {
 
+  const handleSend = async () => {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from:"mithunverma5895@gmail.com",
+      to:"mithunverma0107@gmail.com",
+      subject:"Selected rows",
+      html: <p>{checkedRowData}</p>
+    })
+    // console.log(checkedRowData);
   }
+
+  const handleChecked = (e, data) => {
+    const isChecked = e.target.checked;
+    if (isChecked) {
+      setCheckedRowData([...checkedRowData, data]);
+    } else {
+      setCheckedRowData(checkedRowData.filter(row => row !== data));
+    }
+  };
+
 
   return (
     <div className="overflow-x-auto">
@@ -100,7 +122,7 @@ const TableComponent = () => {
             tableData.map((data) => (
               <Table.Row key={data._id}>
                 <Table.Cell>
-                  <Checkbox />
+                  <Checkbox onChange={(e) => handleChecked(e, data)}/>
                 </Table.Cell>
                 <Table.Cell>{data.serialNumber}</Table.Cell>
                 <Table.Cell>{data.name}</Table.Cell>
