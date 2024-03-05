@@ -80,8 +80,8 @@ const TableComponent = () => {
   };
 
   return (
-    <div>
-      <Table hoverable className="mt-10">
+    <div className="overflow-x-auto">
+      <Table hoverable className="mt-5">
         <Table.Head>
           <Table.HeadCell>Select</Table.HeadCell>
           <Table.HeadCell>ID</Table.HeadCell>
