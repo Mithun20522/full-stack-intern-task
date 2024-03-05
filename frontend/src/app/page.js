@@ -1,11 +1,11 @@
 import FormPopUp from "@/components/FormPopUp";
-import Table from "@/components/Table";
+import TableComponent from "@/components/Table";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center mt-7">
+    <div className="flex flex-col items-center mt-7 space-y-5">
       <FormPopUp/>
-      <Table/>
+      <TableComponent/>
     </div>
   );
 }
