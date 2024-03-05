@@ -12,7 +12,6 @@ await mongoose.connect(process.env.MONGO_DB_URL)
     .catch(() => console.log('Error occurred while connecting mongoDB'));
 
 
-
 app.use('/api',router);
 
 app.listen(process.env.PORT, () => console.log(`server is listening on PORT: ${process.env.PORT}`));
