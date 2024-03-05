@@ -1,39 +1,65 @@
-
-'use client';
-
-import { Checkbox, Table, Button } from 'flowbite-react';
+"use client";
+import { useState, useEffect } from "react";
+import { Checkbox, Table, Button } from "flowbite-react";
 const TableComponent = () => {
+  const [tableData, setTableData] = useState([]);
+  useEffect(() => {
+    const fetchedData = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/get-data", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setTableData(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchedData();
+  }, [tableData]);
+
   return (
     <div>
-        <Table hoverable className='mt-10'>
-            <Table.Head>
-                <Table.HeadCell>Select</Table.HeadCell>
-                <Table.HeadCell>ID</Table.HeadCell>
-                <Table.HeadCell>Name</Table.HeadCell>
-                <Table.HeadCell>Phone Number</Table.HeadCell>
-                <Table.HeadCell>Email</Table.HeadCell>
-                <Table.HeadCell>Hobbies</Table.HeadCell>
-                <Table.HeadCell>Update / Delete</Table.HeadCell>
-            </Table.Head>
-            <Table.Body>
-                <Table.Row>
+      <Table hoverable className="mt-10">
+        <Table.Head>
+          <Table.HeadCell>Select</Table.HeadCell>
+          <Table.HeadCell>ID</Table.HeadCell>
+          <Table.HeadCell>Name</Table.HeadCell>
+          <Table.HeadCell>Phone Number</Table.HeadCell>
+          <Table.HeadCell>Email</Table.HeadCell>
+          <Table.HeadCell>Hobbies</Table.HeadCell>
+          <Table.HeadCell>Update / Delete</Table.HeadCell>
+        </Table.Head>
+        <Table.Body >
+            {
+                tableData && tableData.map((data) => (
+                    <Table.Row key={data._id}>
                     <Table.Cell>
-                        <Checkbox/>
+                      <Checkbox />
                     </Table.Cell>
                     <Table.Cell>1</Table.Cell>
-                    <Table.Cell>virat</Table.Cell>
-                    <Table.Cell>128948484</Table.Cell>
-                    <Table.Cell>virat@gmail.com</Table.Cell>
-                    <Table.Cell>cricket</Table.Cell>
-                    <Table.Cell className='flex gap-2'>
-                        <Button color='success' outline>Update</Button>
-                        <Button color='failure' outline>Delete</Button>
+                    <Table.Cell>{data.name}</Table.Cell>
+                    <Table.Cell>{data.phonenumber}</Table.Cell>
+                    <Table.Cell>{data.email}</Table.Cell>
+                    <Table.Cell>{data.hobby}</Table.Cell>
+                    <Table.Cell className="flex gap-2">
+                      <Button color="success" outline>
+                        Update
+                      </Button>
+                      <Button color="failure" outline>
+                        Delete
+                      </Button>
                     </Table.Cell>
-                </Table.Row>
+                  </Table.Row>
+                ))
+            }
             </Table.Body>
-        </Table>
+      </Table>
     </div>
   );
-}
+};
 
 export default TableComponent;

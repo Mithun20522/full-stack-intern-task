@@ -13,6 +13,7 @@ const FormPopUp = () => {
   const handleSubmit = async (e) => {
     try {
         e.preventDefault();
+        setOpenModal(false);
         const {name, email, phonenumber, hobby} = e.target.elements;
         const res = await fetch(`http://localhost:5000/api/create-data`,{
             method: 'POST',
