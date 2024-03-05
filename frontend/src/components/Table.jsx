@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Checkbox, Table, Button } from "flowbite-react";
-const TableComponent = ({setOpenModal}) => {
+const TableComponent = ({setOpenModal, formData, setFormData}) => {
   const [tableData, setTableData] = useState([]);
   useEffect(() => {
     const fetchedData = async () => {
@@ -15,7 +15,6 @@ const TableComponent = ({setOpenModal}) => {
           setTableData(data);
         }
       } catch (error) {
-        console.log(error);
       }
     };
     fetchedData();
@@ -32,7 +31,6 @@ const handleDelete = async(id) => {
             setTableData(data);
         }
     } catch (error) {
-        
     }
 }
 
@@ -41,15 +39,22 @@ const handleUpdate = async(id) => {
         setOpenModal(true);
         const res = await fetch(`http://localhost:5000/api/update-data/${id}`,{
             method: 'PATCH',
-            headers: {'Content-Type': 'application/json'}
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                name:formData.name,
+                email:formData.email,
+                phonenumber:formData.phonenumber,
+                hobby:formData.hobby
+            })
         })
+        
         if(res.ok){
             const data = await res.json();
-            // setTableData(data);
-            console.log(data);
+            setFormData({name:data.name,email:data.email,phonenumber:data.phonenumber,hobby:data.hobby})
+            setTableData([data]);
         }
     } catch (error) {
-        
+        console.log(error.message);
     }
 }
 

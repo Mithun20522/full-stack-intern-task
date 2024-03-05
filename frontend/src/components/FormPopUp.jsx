@@ -6,7 +6,7 @@ import TableComponent from './Table';
 
 const FormPopUp = () => {
   const [openModal, setOpenModal] = useState(false);
-  const [formData, setFormData] = useState([]);
+  const [formData, setFormData] = useState({});
   function onCloseModal() {
     setOpenModal(false);
   }
@@ -28,7 +28,7 @@ const FormPopUp = () => {
         });
         if(res.ok){
             const data = await res.json();
-            setFormData([data]);
+            setFormData(data);
         }
         else{
             console.log("error while fetching response");
@@ -38,6 +38,11 @@ const FormPopUp = () => {
     }
     e.target.reset();
   }
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
+  
 
   return (
     <>
@@ -55,6 +60,8 @@ const FormPopUp = () => {
                 id="text"
                 type='text'
                 name='name'
+                value={formData.name}
+                onChange={handleChange}
                 placeholder="Shane watson"
                 required
               />
@@ -67,6 +74,8 @@ const FormPopUp = () => {
                 id="email"
                 type='email'
                 name='email'
+                value={formData.email}
+                onChange={handleChange}
                 placeholder="name@example.com"
                 required
               />
@@ -78,6 +87,9 @@ const FormPopUp = () => {
               <TextInput
                 id="phonenumber"
                 type='tel'
+                name='phonenumber'
+                value={formData.phonenumber}
+                onChange={handleChange}
                 placeholder="888 888 8888"
                 maxLength="10"
                 required
@@ -89,6 +101,10 @@ const FormPopUp = () => {
               </div>
               <TextInput
                 id="hobby"
+                type='text'
+                name='hobby'
+                value={formData.hobby}
+                onChange={handleChange}
                 placeholder="dance"
                 required
               />
@@ -99,7 +115,7 @@ const FormPopUp = () => {
           </form>
         </Modal.Body>
       </Modal>
-      <TableComponent setOpenModal={setOpenModal}/>
+      <TableComponent setOpenModal={setOpenModal} formData={formData} setFormData={setFormData}/>
     </>
   );
 }
