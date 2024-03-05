@@ -2,6 +2,7 @@
 
 import { Button, Checkbox, Label, Modal, TextInput } from 'flowbite-react';
 import { useState } from 'react';
+import TableComponent from './Table';
 
 const FormPopUp = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -98,6 +99,7 @@ const FormPopUp = () => {
           </form>
         </Modal.Body>
       </Modal>
+      <TableComponent setOpenModal={setOpenModal}/>
     </>
   );
 }

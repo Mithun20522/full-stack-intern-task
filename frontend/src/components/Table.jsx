@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Checkbox, Table, Button } from "flowbite-react";
-const TableComponent = () => {
+const TableComponent = ({setOpenModal}) => {
   const [tableData, setTableData] = useState([]);
   useEffect(() => {
     const fetchedData = async () => {
@@ -20,6 +20,38 @@ const TableComponent = () => {
     };
     fetchedData();
   }, [tableData]);
+
+const handleDelete = async(id) => {
+    try {
+        const res = await fetch(`http://localhost:5000/api/delete-data/${id}`,{
+            method: 'DELETE',
+            headers: {'Content-Type': 'application/json'}
+        })
+        if(res.ok){
+            const data = await res.json();
+            setTableData(data);
+        }
+    } catch (error) {
+        
+    }
+}
+
+const handleUpdate = async(id) => {
+    try {
+        setOpenModal(true);
+        const res = await fetch(`http://localhost:5000/api/update-data/${id}`,{
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json'}
+        })
+        if(res.ok){
+            const data = await res.json();
+            // setTableData(data);
+            console.log(data);
+        }
+    } catch (error) {
+        
+    }
+}
 
   return (
     <div>
@@ -46,10 +78,10 @@ const TableComponent = () => {
                     <Table.Cell>{data.email}</Table.Cell>
                     <Table.Cell>{data.hobby}</Table.Cell>
                     <Table.Cell className="flex gap-2">
-                      <Button color="success" outline>
+                      <Button color="success" outline onClick={() => handleUpdate(data._id)}>
                         Update
                       </Button>
-                      <Button color="failure" outline>
+                      <Button color="failure" outline onClick={() => handleDelete(data._id)}>
                         Delete
                       </Button>
                     </Table.Cell>
