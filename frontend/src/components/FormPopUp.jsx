@@ -43,17 +43,12 @@ const FormPopUp = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
-  const handleSend = () => {
-
-  }
+  
   
 
   return (
     <>
-      <div className='flex justify-center mt-5 gap-5'>
-        <Button onClick={() => setOpenModal(true)}>New Data</Button>
-        <Button gradientDuoTone='greenToBlue' outline onClick={handleSend}>Send Selected Data</Button>
-      </div>
+      <Button onClick={() => setOpenModal(true)}>New Data</Button>
       <Modal show={openModal} size="md" onClose={onCloseModal} popup>
         <Modal.Header />
         <Modal.Body>

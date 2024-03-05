@@ -78,9 +78,13 @@ const TableComponent = () => {
     setOpenModal(false);
     e.target.reset();
   };
+  const handleSend = () => {
+
+  }
 
   return (
     <div className="overflow-x-auto">
+      <Button gradientDuoTone='greenToBlue' outline onClick={handleSend}>Send Selected Data</Button>
       <Table hoverable className="mt-5">
         <Table.Head>
           <Table.HeadCell>Select</Table.HeadCell>
