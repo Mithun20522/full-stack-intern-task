@@ -13,9 +13,15 @@ app.use(cors());
 app.get('/', (req, res) => {
     res.status(201).send('Test ');
 })
-await mongoose.connect(process.env.MONGO_DB_URL)
-    .then(() => console.log('MongoDB connected'))
-    .catch(() => console.log('Error occurred while connecting mongoDB'));
+
+mongoose
+    .connect(process.env.MONGO_DB_URL)
+    .then(() => {
+        console.log('MongoDB connected');
+    }).catch((error) => {
+        console.log("Error: ", error);
+    })
+
 
 
     
