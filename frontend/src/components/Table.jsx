@@ -17,7 +17,7 @@ const TableComponent = () => {
   useEffect(() => {
     const fetchedData = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/get-data", {
+        const res = await fetch("https://full-stack-intern-task.onrender.com/api/get-data", {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -33,7 +33,7 @@ const TableComponent = () => {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/delete-data/${id}`, {
+      const res = await fetch(`https://full-stack-intern-task.onrender.com/api/delete-data/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
@@ -60,7 +60,7 @@ const TableComponent = () => {
     e.preventDefault();
     try {
       const { name, email, phonenumber, hobby } = e.target.elements;
-      const res = await fetch(`http://localhost:5000/api/update-data/${selectedId}`, {
+      const res = await fetch(`https://full-stack-intern-task.onrender.com/api/update-data/${selectedId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

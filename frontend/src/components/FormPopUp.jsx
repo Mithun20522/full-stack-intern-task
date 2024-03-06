@@ -16,7 +16,7 @@ const FormPopUp = () => {
         e.preventDefault();
         setOpenModal(false);
         const {name, email, phonenumber, hobby} = e.target.elements;
-        const res = await fetch(`http://localhost:5000/api/create-data`,{
+        const res = await fetch(`https://full-stack-intern-task.onrender.com/api/create-data`,{
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
