@@ -22,8 +22,6 @@ mongoose
         console.log("Error: ", error);
     })
 
-
-
     
 app.use('/api',router);
 
