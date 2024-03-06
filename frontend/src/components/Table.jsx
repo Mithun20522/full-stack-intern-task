@@ -83,9 +83,9 @@ const TableComponent = () => {
     e.target.reset();
   };
 
-  let msg = "";
+  
   const handleSend = async () => {
-    // console.log(checkedRowData);
+    let msg = "";
     checkedRowData.forEach((row) => {
       let rowNum = row.serialNumber;
       let name = row.name;
@@ -95,7 +95,6 @@ const TableComponent = () => {
       msg = msg.concat(`Row: ${rowNum} `,`Name: ${name} `,`Email: ${email} `,`Phone: ${phonenumber} `,`Hobby: ${hobby} `," ** ");
     })
 
-    // console.log(msg);
     const templateParams = {
       userMessage:msg
     };
