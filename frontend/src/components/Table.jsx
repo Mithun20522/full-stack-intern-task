@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Button, Checkbox, Label, Modal, TextInput, Table } from 'flowbite-react';
-import { Resend } from "resend";
+import emailjs from 'emailjs-com'
 
 const TableComponent = () => {
   const [tableData, setTableData] = useState([]);
@@ -83,16 +83,30 @@ const TableComponent = () => {
     e.target.reset();
   };
 
+  let msg = "";
   const handleSend = async () => {
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
-      from:"mithunverma5895@gmail.com",
-      to:"mithunverma0107@gmail.com",
-      subject:"Selected rows",
-      html: <p>{checkedRowData}</p>
-    })
     // console.log(checkedRowData);
+    checkedRowData.forEach((row) => {
+      let rowNum = row.serialNumber;
+      let name = row.name;
+      let email = row.email;
+      let phonenumber = row.phonenumber;
+      let hobby = row.hobby;
+      msg = msg.concat(`Row: ${rowNum} `,`Name: ${name} `,`Email: ${email} `,`Phone: ${phonenumber} `,`Hobby: ${hobby} `," ** ");
+    })
+
+    // console.log(msg);
+    const templateParams = {
+      userMessage:msg
+    };
+
+    emailjs.send('service_bmjlncn', 'template_17xeoah', templateParams,'h6H2mJlfKxfG05Ofc')
+    .then((res) => alert(`StatusCode: ${res.status}, Message: ${res.text}`))
+    .catch((err) => alert('error'))
+
   }
+
+  
 
   const handleChecked = (e, data) => {
     const isChecked = e.target.checked;
